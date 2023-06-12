@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Store - Product Details</title>
+</head>
+<body>
+    <h1>Product Details</h1>
+
+    <div id="product-details"></div>
+
+    <a href="index.html">Voltar para a página inicial</a>
+
+    <script>
+        function getProductDetails() {
+            var productId = new URLSearchParams(window.location.search).get('id');
+
+            fetch(`https://fakestoreapi.com/products/${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var productDetails = document.getElementById('product-details');
+                    
+                    if (data) {
+                        productDetails.innerHTML = `
+                            <h3>${data.title}</h3>
+                            <img src="${data.image}" alt="${data.title}"> 
+                            <p>Price: ${data.price}</p>
+                            <p>Description: ${data.description}</p>
+                            <p>Category: ${data.category}</p>
+                        `;
+                    } else {
+                        productDetails.innerHTML = '<p>Product details not found.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                  console.log("asdasd");
+                    var productDetails = document.getElementById('product-details');
+                    productDetails.innerHTML = '<p>Error occurred while retrieving product details.</p>';
+                });
+        }
+
+        getProductDetails();
+    </script>
+</body>
+</html>

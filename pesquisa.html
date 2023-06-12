@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Store</title>
+</head>
+<body>
+<main>
+    <h1>Fake Store</h1>
+
+    <div id="search-page">
+        <h2>Search</h2>
+        <select id="limit-select">
+            <option value="5">5 itens</option>
+            <option value="10">10 itens</option>
+            <option value="20" selected>20 itens</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search for products">
+        <select id="category-select">
+            <option value="all">All</option>
+            <option value="mens_clothing">Men's Wear</option>
+            <option value="womens_clothing">Women's Wear</option>
+            <option value="jewelery">Jewelry</option>
+        </select>
+        <button id="search-button">Search</button>
+        <div id="search-results"></div>
+    </div>
+
+    <div id="product-details-page" style="display: none;">
+        <h2>Product Details</h2>
+        <div id="product-details"></div>
+        <button id="back-button">Back to Search</button>
+    </div>
+
+    <script>
+        function showProductDetails(productId) {
+            window.location.replace() = `detalhes.html?id=${productId}`;
+        }
+
+        function showSearchPage() {
+            document.getElementById('search-page').style.display = 'block';
+            document.getElementById('product-details-page').style.display = 'none';
+        }
+
+        function searchProducts() {
+            var searchInput = document.getElementById('search-input').value;
+            var categorySelect = document.getElementById('category-select');
+            var selectedCategory = categorySelect.value;
+
+            var apiUrl = 'https://fakestoreapi.com/products';
+            if (searchInput)
+            if (searchInput) {
+                apiUrl += `?title=${searchInput}`;
+            }
+
+
+            if (selectedCategory !== 'all') {
+                apiUrl += `&category=${selectedCategory}`;
+            }
+            else if (selectedCategory !== 'mens_wear') {
+                apiUrl += `&category=${selectedCategory}`;
+            }
+            else if (selectedCategory !== 'womens_wear') {
+                apiUrl += `&category=${selectedCategory}`;
+            }
+            else if (selectedCategory !== 'jewelry') {
+                apiUrl += `&category=${selectedCategory}`;
+            }
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    var searchResults = document.getElementById('search-results');
+                    searchResults.innerHTML = '';
+
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<p>No results found.</p>';
+                    } else {
+                        data.forEach(product => {
+                            var productItem = document.createElement('div');
+                            productItem.innerHTML = `
+                                <h3>${product.title}</h3>
+                                <img src="${product.image}" alt="${product.title}">
+                                <p>Price: ${product.price}</p>
+                                <button onclick="showProductDetails(${product.id})">View Details</button>
+                            `;
+                            searchResults.appendChild(productItem);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    var searchResults = document.getElementById('search-results');
+                    searchResults.innerHTML = '<p>Error occurred while searching for products.</p>';
+                });
+        }
+
+        document.getElementById('search-button').addEventListener('click', searchProducts);
+
+        document.getElementById('back-button').addEventListener('click', showSearchPage);
+    </script>
+</main>
+</body>
+</html>
